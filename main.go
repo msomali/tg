@@ -1,7 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/urfave/cli/v2"
+)
+
+
 
 func main() {
-	fmt.Println("Hello World!! from command line")
+	app := &cli.App{
+		Name:  "tg",
+		Usage: "command line tool for pushpay and disbursement via tigopesa",
+		Action: func(c *cli.Context) error {
+			fmt.Println("Hello friend!")
+			return nil
+		},
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func App() *cli.App {
+	return &cli.App{}
 }
