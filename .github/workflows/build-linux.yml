@@ -15,9 +15,8 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '1.16.5'
+      - name: install dependencies
+        run: go mod tidy
 
-     - name: install dependencies
-       run: go mod tidy
-
-     - name: run build
-       run: go build .
+      - name: run build
+        run: go build .
