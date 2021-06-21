@@ -1,0 +1,23 @@
+name: build executables for linux distros
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  ubuntu-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.5'
+
+     - name: install dependencies
+       run: go mod tidy
+
+     - name: run build
+       run: go build .
