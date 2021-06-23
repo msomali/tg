@@ -10,12 +10,47 @@ func TestMake(t *testing.T) {
 	type args struct {
 		options []Option
 	}
-	var tests []struct {
+	tests := []struct {
 		name string
 		args args
 		want Reader
+	}{
+		{
+			name: "reader with default parameters",
+			args: args{options: nil},
+			want: &reader{
+				path:         "",
+				pushFile:     "push.csv",
+				disburseFile: "disburse.csv",
+			},
+		},
+		{
+			name: "reader without any default settings",
+			args: args{
+				options: []Option{
+					WithDisburseFileName(""),WithPushFileName(""),WithDefaultPath(""),
+				},
+			},
+			want: &reader{
+				path:         "",
+				pushFile:     "push.csv",
+				disburseFile: "disburse.csv",
+			},
+		},
+		{
+			name: "reader with some names",
+			args: args{
+				options: []Option{
+					WithDisburseFileName("theonedisbursefile.csv"),WithPushFileName("thepushmaestro.csv"),
+				},
+			},
+			want: &reader{
+				path:         "",
+				pushFile:     "thepushmaestro.csv",
+				disburseFile: "theonedisbursefile.csv",
+			},
+		},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Make(tt.args.options...); !reflect.DeepEqual(got, tt.want) {
@@ -38,8 +73,8 @@ func TestWithDefaultFileName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := WithDefaultFileName(tt.args.filename); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("WithDefaultFileName() = %v, want %v", got, tt.want)
+			if got := WithPushFileName(tt.args.filename); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("WithPushFileName() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -98,6 +133,26 @@ func Test_reader_ReadFile(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ReadFile() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestWithDisburseFileName(t *testing.T) {
+	type args struct {
+		filename string
+	}
+	tests := []struct {
+		name string
+		args args
+		want Option
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := WithDisburseFileName(tt.args.filename); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("WithDisburseFileName() = %v, want %v", got, tt.want)
 			}
 		})
 	}

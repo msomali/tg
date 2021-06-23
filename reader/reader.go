@@ -39,6 +39,9 @@ type (
 
 func WithDefaultPath(path string) Option {
 	return func(r Reader) {
+		if path == ""{
+			return
+		}
 		rd, ok := r.(*reader)
 		if ok {
 			rd.path = path
@@ -48,11 +51,28 @@ func WithDefaultPath(path string) Option {
 	}
 }
 
-func WithDefaultFileName(filename string) Option {
+func WithPushFileName(filename string) Option {
 	return func(r Reader) {
+		if filename== ""{
+			return
+		}
 		rd, ok := r.(*reader)
 		if ok {
-			rd.path = filename
+			rd.pushFile= filename
+			return
+		}
+
+	}
+}
+
+func WithDisburseFileName(filename string) Option {
+	return func(r Reader) {
+		if filename == ""{
+			return
+		}
+		rd, ok := r.(*reader)
+		if ok {
+			rd.disburseFile= filename
 			return
 		}
 
@@ -62,8 +82,8 @@ func WithDefaultFileName(filename string) Option {
 func Make(options ...Option) Reader {
 	rd := &reader{
 		path:         defaultPath,
-		pushFile:     defaultDisburseFileName,
-		disburseFile: defaultPushFileName,
+		pushFile:     defaultPushFileName,
+		disburseFile: defaultDisburseFileName,
 	}
 
 	for _, option := range options {
