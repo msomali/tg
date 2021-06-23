@@ -10,103 +10,70 @@ import (
 )
 
 const (
-	defaultPushPath = ""
-	defaultDisbursePath = ""
+	defaultPath             = ""
 	defaultPushFileName     = "push.csv"
 	defaultDisburseFileName = "disburse.csv"
 )
 
 var (
-	_ tg.Reader = (*PayFileReader)(nil)
-	_ tg.Reader = (*DisburseFileReader)(nil)
+	_ Reader = (*reader)(nil)
 )
 
 type (
-	PayFileReader struct {
-		DefaultPath string
-		DefaultFileName string
+	reader struct {
+		path         string
+		pushFile     string
+		disburseFile string
 	}
 
-	DisburseFileReader struct {
-		DefaultPath string
-		DefaultFileName string
+	Option func(Reader)
+
+	//Reader implements only one method that takes the file
+	// in CSV format read it and return an array of structs
+	// of either Request or Request
+	Reader interface {
+		ReadFile(filepath string, requestType tg.RequestType) ([]tg.Request, error)
 	}
-
-	OpErr struct {
-		Err error
-		Desc string
-	}
-
-	Option func(reader tg.Reader)
-
 )
 
-func (e *OpErr) Error() string{
-	return ""
-}
 
 func DefaultPath(path string) Option {
-	return func(reader tg.Reader) {
-		push, pushOk := reader.(*PayFileReader)
-		if pushOk{
-			push.DefaultPath = path
+	return func(r Reader) {
+		rd, ok := r.(*reader)
+		if ok {
+			rd.path = path
 			return
-		}
-		disburse, disburseOK := reader.(*DisburseFileReader)
-		if disburseOK {
-			disburse.DefaultPath = path
 		}
 
 	}
 }
 
 func DefaultFileName(filename string) Option {
-	return func(reader tg.Reader) {
-		push, pushOk := reader.(*PayFileReader)
-		if pushOk{
-			push.DefaultFileName = filename
+	return func(r Reader) {
+		rd, ok := r.(*reader)
+		if ok {
+			rd.path = filename
 			return
 		}
-		disburse, disburseOK := reader.(*DisburseFileReader)
-		if disburseOK {
-			disburse.DefaultFileName = filename
-		}
 
 	}
 }
 
-func ForPushOps(opts... Option) *PayFileReader{
-
-	reader := &PayFileReader{
-		DefaultPath:     defaultPushPath,
-		DefaultFileName: defaultPushFileName,
+func Make(options ...Option) Reader {
+	rd := &reader{
+		path:         defaultPath,
+		pushFile:     defaultDisburseFileName,
+		disburseFile: defaultPushFileName,
 	}
 
-	for _, opt := range opts {
-		opt(reader)
+	for _, option := range options {
+		option(rd)
 	}
 
-	return reader
+	return rd
 }
 
-func ForDisburseOps(opts ... Option) *DisburseFileReader{
-	reader := &DisburseFileReader{
-		DefaultPath:     defaultDisbursePath,
-		DefaultFileName: defaultDisburseFileName,
-	}
-
-	for _, opt := range opts {
-		opt(reader)
-	}
-
-	return reader
-}
-
-func (d *DisburseFileReader) ReadFile(filepath string) (interface{}, error) {
-	panic("implement me")
-}
-
-func (p *PayFileReader) ReadFile(filepath string) (interface{}, error) {
+func (p *reader) ReadFile(filepath string, requestType tg.RequestType) ([]tg.Request, error) {
 
 	if filepath == "" {
 		//look for file in a working dir named push.csv
@@ -118,7 +85,7 @@ func (p *PayFileReader) ReadFile(filepath string) (interface{}, error) {
 	}
 	reader := csv.NewReader(bufio.NewReader(f))
 
-	var requests []tg.PushPayRequest
+	var requests []tg.Request
 	for {
 		line, err := reader.Read()
 		if err == io.EOF {
@@ -126,11 +93,22 @@ func (p *PayFileReader) ReadFile(filepath string) (interface{}, error) {
 		} else if err != nil {
 			log.Fatal(err)
 		}
-		requests = append(requests, tg.PushPayRequest{
-			ReferenceID: line[0],
-			Amount:      line[1],
-			MSISDN:      line[2],
-			Remarks:     line[3],
+
+
+		referenceID := line[0]
+		amount := line[1]
+		msisdn := line[2]
+
+		var remarks string
+
+		if requestType == tg.PushPay{
+			remarks = line[3]
+		}
+		requests = append(requests, tg.Request{
+			ReferenceID: referenceID,
+			Amount:      amount,
+			MSISDN:      msisdn,
+			Remarks:     remarks,
 		})
 	}
 
