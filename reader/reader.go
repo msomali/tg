@@ -37,7 +37,7 @@ type (
 )
 
 
-func DefaultPath(path string) Option {
+func WithDefaultPath(path string) Option {
 	return func(r Reader) {
 		rd, ok := r.(*reader)
 		if ok {
@@ -48,7 +48,7 @@ func DefaultPath(path string) Option {
 	}
 }
 
-func DefaultFileName(filename string) Option {
+func WithDefaultFileName(filename string) Option {
 	return func(r Reader) {
 		rd, ok := r.(*reader)
 		if ok {
