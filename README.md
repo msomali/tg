@@ -3,22 +3,22 @@ a command line tool to perform tigo based push payment request and disbursement.
 
 
 ## supported features
-- [config](#config)
+- [init](#init)
 - [push](#push)
 - [disburse](#disburse)
 
 
-## config
+## init
 This offers a way to configure the tool with tigo integration details
 
 ```bash
- tg config --file=config.yaml
+ tg init --file=config.yaml
 
- tg config
+ tg init
 
- tg config push
+ tg init push
 
- tg config disburse
+ tg init disburse
 
 ```
 
@@ -27,6 +27,8 @@ This offers a way to configure the tool with tigo integration details
 make push pay request to a single user
 
 ```bash
+
+tg push --config=config-file.yml --file=customers.csv
 
 tg push --phone=0712XXXXXX --amount=10000 --remarks="donation from cmd"
 
