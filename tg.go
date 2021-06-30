@@ -3,6 +3,7 @@ package tg
 import (
 	"fmt"
 	"github.com/techcraftt/tigosdk/aw"
+	"github.com/techcraftt/tigosdk/pkg/tigo"
 	"github.com/techcraftt/tigosdk/push"
 	"github.com/urfave/cli/v2"
 )
@@ -61,9 +62,47 @@ type (
 )
 
 func Make(config *Config, opts...Option)*App{
+
+	baseClient := tigo.NewBaseClient()
+
+	disburseConfig := &aw.Config{
+		AccountName:   config.DisburseAccountName,
+		AccountMSISDN: config.DisburseAccountMSISDN,
+		BrandID:       config.DisburseBrandID,
+		PIN:           config.DisbursePIN,
+		RequestURL:    config.DisburseRequestURL,
+	}
+	disburseClient := &aw.Client{
+		Config:     disburseConfig,
+		BaseClient: baseClient,
+	}
+
+	pushConfig := &push.Config{
+		Username:              config.PushUsername,
+		Password:              config.PushPassword,
+		PasswordGrantType:     config.PushPasswordGrantType,
+		ApiBaseURL:            config.PushApiBaseURL,
+		GetTokenURL:           config.PushGetTokenURL,
+		BillerMSISDN:          config.PushBillerMSISDN,
+		BillerCode:            config.PushBillerCode,
+		PushPayURL:            config.PushPayURL,
+		ReverseTransactionURL: config.PushReverseTransactionURL,
+		HealthCheckURL:        config.PushHealthCheckURL,
+	}
+
+	pushClient := &push.Client{
+		Config:          pushConfig,
+		BaseClient:      baseClient,
+		CallbackHandler: nil,
+	}
+
+	client := &Client{
+		push:     pushClient,
+		disburse: disburseClient,
+	}
 	app := &App{
 		cli:    nil,
-		client: nil,
+		client: client,
 	}
 
 	for _, opt := range opts {
