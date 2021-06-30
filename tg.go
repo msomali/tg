@@ -12,12 +12,14 @@ const (
 	Disburse
 )
 
+
+
 type (
 	App struct {
 		CLI      *cli.App
 		Conf     *Config
-		Push     *push.Client
-		Disburse *aw.Client
+		push     *push.Client
+		disburse *aw.Client
 	}
 	RequestType int
 
@@ -92,6 +94,49 @@ func NewApplication()*cli.App{
 }
 
 func makeCommands ()[]*cli.Command{
+
+	//tigo.BaseClient{
+	//	HttpClient: nil,
+	//	Ctx:        nil,
+	//	Timeout:    0,
+	//	Logger:     nil,
+	//	DebugMode:  false,
+	//}
+	//
+
+	//push.Config{
+	//	Username:              "",
+	//	Password:              "",
+	//	PasswordGrantType:     "",
+	//	ApiBaseURL:            "",
+	//	GetTokenURL:           "",
+	//	BillerMSISDN:          "",
+	//	BillerCode:            "",
+	//	PushPayURL:            "",
+	//	ReverseTransactionURL: "",
+	//	HealthCheckURL:        "",
+	//}
+
+	//
+	//&push.Client{
+	//	Config:          nil,
+	//	BaseClient:      nil,
+	//	CallbackHandler: nil,
+	//}
+	//
+
+	//aw.Config{
+	//	AccountName:   "",
+	//	AccountMSISDN: "",
+	//	BrandID:       "",
+	//	PIN:           "",
+	//	RequestURL:    "",
+	//}
+
+	//aw.Client{
+	//	Config:     nil,
+	//	BaseClient: nil,
+	//}
 	var cms []*cli.Command
 
 	config := &cli.Command{

@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/techcraftt/tg"
-	"github.com/urfave/cli/v2"
 	"log"
 	"os"
 )
@@ -15,8 +14,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func App() *cli.App {
-	return &cli.App{}
 }
