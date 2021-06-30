@@ -12,7 +12,6 @@ func (client *Client) MakePushCommand() *cli.Command {
 	flags := []cli.Flag{
 		&cli.StringFlag{
 			Name:    "phone",
-			Aliases: []string{"msisdn"},
 			Usage:   "phone number to receive request",
 			Value:   "",
 		},
@@ -23,7 +22,6 @@ func (client *Client) MakePushCommand() *cli.Command {
 		},
 		&cli.StringFlag{
 			Name:    "id",
-			Aliases: []string{"reference"},
 			Value:   "",
 			Usage:   "the reference id of the request",
 		},
@@ -35,7 +33,6 @@ func (client *Client) MakePushCommand() *cli.Command {
 	}
 	command := &cli.Command{
 		Name:         "push",
-		Aliases:      []string{"p"},
 		Usage:        "send push pay request",
 		Before:       client.BeforePushAction,
 		After:        client.AfterPushAction,
