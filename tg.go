@@ -15,9 +15,14 @@ const (
 
 
 type (
+
+	Option func(app *App)
+
 	App struct {
-		CLI      *cli.App
-		Conf     *Config
+		cli *cli.App
+		client *Client
+	}
+	Client struct {
 		push     *push.Client
 		disburse *aw.Client
 	}
@@ -25,7 +30,7 @@ type (
 
 	Request struct {
 		ReferenceID string
-		Amount      string
+		Amount      float64
 		MSISDN      string
 		Remarks     string
 	}
@@ -54,6 +59,19 @@ type (
 		PushHealthCheckURL        string
 	}
 )
+
+func Make(config *Config, opts...Option)*App{
+	app := &App{
+		cli:    nil,
+		client: nil,
+	}
+
+	for _, opt := range opts {
+		opt(app)
+	}
+
+	return app
+}
 
 func NewApplication()*cli.App{
 
@@ -184,4 +202,8 @@ func makeCommands ()[]*cli.Command{
 	cms = append(cms,config)
 
 	return cms
+}
+
+func (app *App) Run(args []string)error{
+	return app.cli.Run(args)
 }

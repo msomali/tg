@@ -9,9 +9,10 @@ import (
 
 
 func main() {
-	app := tg.NewApplication()
+	app := tg.Make(&tg.Config{})
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }

@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (app *App) MakePushCommand() *cli.Command {
+func (client *Client) MakePushCommand() *cli.Command {
 	flags := []cli.Flag{
 		&cli.StringFlag{
 			Name:    "phone",
@@ -37,17 +37,17 @@ func (app *App) MakePushCommand() *cli.Command {
 		Name:         "push",
 		Aliases:      []string{"p"},
 		Usage:        "send push pay request",
-		Before:       app.BeforePushAction,
-		After:        app.AfterPushAction,
-		Action:       app.OnPushAction,
-		OnUsageError: app.OnPushError,
+		Before:       client.BeforePushAction,
+		After:        client.AfterPushAction,
+		Action:       client.OnPushAction,
+		OnUsageError: client.OnPushError,
 		Flags:        flags,
 	}
 
 	return command
 }
 
-func (app *App) BeforePushAction(ctx *cli.Context) error {
+func (client *Client) BeforePushAction(ctx *cli.Context) error {
 
 	//todo: validate number (msisdn)
 	//todo: validate amount
@@ -56,7 +56,7 @@ func (app *App) BeforePushAction(ctx *cli.Context) error {
 	return nil
 }
 
-func (app *App) OnPushAction(ctx *cli.Context) error {
+func (client *Client) OnPushAction(ctx *cli.Context) error {
 	ctx2, cancel := context.WithTimeout(ctx.Context, time.Minute)
 	defer cancel()
 
@@ -67,20 +67,20 @@ func (app *App) OnPushAction(ctx *cli.Context) error {
 
 	request := push.PayRequest{
 		CustomerMSISDN: msisdn,
-		BillerMSISDN:   app.push.BillerMSISDN,
+		BillerMSISDN:   client.push.BillerMSISDN,
 		Amount:         int(amount),
 		Remarks:        remarks,
 		ReferenceID:    id,
 	}
-	response, err := app.push.Pay(ctx2, request)
+	response, err := client.push.Pay(ctx2, request)
 	fmt.Printf("response: %v\n", response)
 	return err
 }
 
-func (app *App) AfterPushAction(ctx *cli.Context) error {
+func (client *Client) AfterPushAction(ctx *cli.Context) error {
 	return nil
 }
 
-func (app *App) OnPushError(context *cli.Context, err error, isSubcommand bool) error {
+func (client *Client) OnPushError(context *cli.Context, err error, isSubcommand bool) error {
 	return nil
 }
