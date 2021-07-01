@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var (
+const (
 	envDisburseAccountName   = "TIGO_DISBURSE_ACCOUNT_NAME"
 	envDisburseAccountMSISDN = "TIGO_DISBURSE_ACCOUNT_MSISDN"
 	envDisburseBrandID       = "TIGO_DISBURSE_BRAND_ID"
@@ -20,6 +20,46 @@ var (
 	envPushURL               = "TIGO_PUSH_URL"
 	envPushCallbackURL       = "TIGO_PUSH_CALLBACK_URL"
 )
+
+var (
+	disburseAccountName   string
+	disburseAccountMSISDN string
+	disburseBrandID       string
+	disbursePin           string
+	disburseURL           string
+	pushUsername          string
+	pushBillerMSISDN      string
+	pushBIllerCode        string
+	pushGetTokenURL       string
+	pushURL               string
+	pushCallbackURL       string
+)
+
+func LoadConfingFromEnv() (*tg.Config, error) {
+	disburseAccountName = os.Getenv(envDisburseAccountName)
+
+	return &tg.Config{
+		ReferenceIDPrefix:         "",
+		AppName:                   "",
+		AppVersion:                "",
+		ReleaseDate:               "",
+		DisburseAccountName:       disburseAccountName,
+		DisburseAccountMSISDN:     disburseAccountMSISDN,
+		DisburseBrandID:           disburseBrandID,
+		DisbursePIN:               disbursePin,
+		DisburseRequestURL:        disburseURL,
+		PushUsername:              pushUsername,
+		PushPassword:              pushUsername,
+		PushPasswordGrantType:     "",
+		PushApiBaseURL:            "",
+		PushGetTokenURL:           "",
+		PushBillerMSISDN:          "",
+		PushBillerCode:            "",
+		PushPayURL:                "",
+		PushReverseTransactionURL: "",
+		PushHealthCheckURL:        "",
+	},nil
+}
 
 func main() {
 	app := tg.Make(&tg.Config{})
