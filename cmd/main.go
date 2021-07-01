@@ -62,8 +62,13 @@ func LoadConfingFromEnv() (*tg.Config, error) {
 }
 
 func main() {
-	app := tg.Make(&tg.Config{})
-	err := app.Run(os.Args)
+
+	conf, err := LoadConfingFromEnv()
+	if err != nil{
+		log.Fatal(err)
+	}
+	app := tg.Make(conf)
+	err = app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
