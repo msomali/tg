@@ -3,11 +3,11 @@ package reader
 import (
 	"bufio"
 	"encoding/csv"
+	"fmt"
 	"github.com/techcraftt/tg"
 	"io"
 	"log"
 	"os"
-	"strconv"
 )
 
 const (
@@ -120,6 +120,8 @@ func (p *reader) ReadFile(filepath string, requestType tg.RequestType) ([]tg.Req
 		amount := line[1]
 		msisdn := line[2]
 
+		fmt.Printf("%v\n",amount)
+
 		var remarks string
 
 		if requestType == tg.PushPay{
@@ -127,7 +129,7 @@ func (p *reader) ReadFile(filepath string, requestType tg.RequestType) ([]tg.Req
 		}
 		requests = append(requests, tg.Request{
 			ReferenceID: referenceID,
-			Amount:      amount,
+			//Amount:      int(amount),
 			MSISDN:      msisdn,
 			Remarks:     remarks,
 		})

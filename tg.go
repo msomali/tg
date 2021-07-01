@@ -31,7 +31,7 @@ type (
 
 	Request struct {
 		ReferenceID string
-		Amount      float64
+		Amount      int
 		MSISDN      string
 		Remarks     string
 	}
@@ -101,7 +101,7 @@ func Make(config *Config, opts...Option)*App{
 		disburse: disburseClient,
 	}
 	app := &App{
-		cli:    nil,
+		cli:    app(client),
 		client: client,
 	}
 
@@ -112,7 +112,7 @@ func Make(config *Config, opts...Option)*App{
 	return app
 }
 
-func NewApplication()*cli.App{
+func app(client *Client)*cli.App{
 
 	author := &cli.Author{
 		Name:  "Pius Alfred",
@@ -128,7 +128,14 @@ func NewApplication()*cli.App{
 		},
 	}
 
-	commands := makeCommands()
+	var commands []*cli.Command
+
+	commands = append(
+		commands,
+		client.MakePushCommand(),
+		client.MakeDisburseCommand(),
+	)
+
 
 	a := &cli.App{
 		Name:                   "tg",
