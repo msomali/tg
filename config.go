@@ -5,9 +5,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func (client *Client) MakeConfigCommand()[]*cli.Command{
+func (client *Client) MakeConfigCommand()*cli.Command{
 
-	var cms []*cli.Command
+
 
 	config := &cli.Command{
 		Name:                   "config",
@@ -51,8 +51,6 @@ func (client *Client) MakeConfigCommand()[]*cli.Command{
 
 	}
 
-	cms = append(cms,config)
-
-	return cms
+	return config
 }
 

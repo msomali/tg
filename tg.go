@@ -131,6 +131,7 @@ func app(client *Client)*cli.App{
 
 	commands = append(
 		commands,
+		client.MakeConfigCommand(),
 		client.MakePushCommand(),
 		client.MakeDisburseCommand(),
 	)
