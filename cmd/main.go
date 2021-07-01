@@ -7,18 +7,18 @@ import (
 )
 
 var (
-	disburseAccountName   = "TIGO_DISBURSE_ACCOUNT_NAME"
-	disburseAccountMSISDN = "TIGO_DISBURSE_ACCOUNT_MSISDN"
-	disburseBrandID       = "TIGO_DISBURSE_BRAND_ID"
-	disbursePin           = "TIGO_DISBURSE_PIN"
-	disburseURL           = "TIGO_DISBURSE_URL"
-	pushUsername          = "TIGO_PUSH_USERNAME"
-	pushPassword          = "TIGO_PUSH_PASSWORD"
-	pushBillerMSISDN      = "TIGO_PUSH_BILLER_MSISDN"
-	pushBIllerCode        = "TIGO_PUSH_BILLER_CODE"
-	pushGetTokenURL       = "TIGO_PUSH_TOKEN_URL"
-	pushURL               = "TIGO_PUSH_URL"
-	pushCallbackURL       = "TIGO_PUSH_CALLBACK_URL"
+	envDisburseAccountName   = "TIGO_DISBURSE_ACCOUNT_NAME"
+	envDisburseAccountMSISDN = "TIGO_DISBURSE_ACCOUNT_MSISDN"
+	envDisburseBrandID       = "TIGO_DISBURSE_BRAND_ID"
+	envDisbursePin           = "TIGO_DISBURSE_PIN"
+	envDisburseURL           = "TIGO_DISBURSE_URL"
+	envPushUsername          = "TIGO_PUSH_USERNAME"
+	envPushPassword          = "TIGO_PUSH_PASSWORD"
+	envPushBillerMSISDN      = "TIGO_PUSH_BILLER_MSISDN"
+	envPushBIllerCode        = "TIGO_PUSH_BILLER_CODE"
+	envPushGetTokenURL       = "TIGO_PUSH_TOKEN_URL"
+	envPushURL               = "TIGO_PUSH_URL"
+	envPushCallbackURL       = "TIGO_PUSH_CALLBACK_URL"
 )
 
 func main() {
