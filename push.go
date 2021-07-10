@@ -50,26 +50,28 @@ func (client *Client) MakePushCommand() *cli.Command {
 }
 
 func (client *Client) BeforePushAction(ctx *cli.Context) error {
+	remarks := ctx.String("remarks")
 	phone := ctx.String("phone")
-	//"^\\d+$"
 	amount := int64(ctx.Float64("amount"))
+	verbose := ctx.Bool("verbose")
+	defer func(v bool) {
+		if v{
+			fmt.Printf("perfoming push pay request described as \"%s\" of amount: %d to phone: %s\n",
+				remarks, amount, phone)
+		}
+	}(verbose)
+
+	err := CheckPhoneNumber(phone)
+	if err != nil{
+		return err
+	}
 	if amount< client.MinPushAmount || amount > client.MaxPushAmount{
 		return fmt.Errorf("the amount (%d) is out of range: allowed MAX is %d, allowed MIN is %d\n", amount,client.MaxPushAmount, client.MinPushAmount)
 	}
-	remarks := ctx.String("remarks")
-	if ctx.Bool("verbose") {
-		fmt.Printf("perfoming push pay request described as \"%s\" of amount: %d to phone: %s\n",
-			remarks, amount, phone)
-	}
-	err := client.ValidateConfig(PushPay)
+	err = client.ValidateConfig(PushPay)
 	if err != nil {
 		return fmt.Errorf("check your push configs: %s", err.Error())
 	}
-
-	//todo: validate number (msisdn)
-	//todo: validate amount
-	//todo: check all parameters
-	//todo: prompt confirmation message
 	return nil
 }
 
@@ -79,7 +81,7 @@ func (client *Client) OnPushAction(ctx *cli.Context) error {
 	msisdn := ctx.String("phone")
 	remarks := ctx.String("remarks")
 	amount := ctx.Float64("amount")
-	id := fmt.Sprintf("%s%d", client.push.Config.BillerCode, time.Now().Local().Unix())
+	id := fmt.Sprintf("%s%s%d", client.push.Config.BillerCode,client.ReferenceIDPrefix,time.Now().Local().Unix())
 
 	request := push.PayRequest{
 		CustomerMSISDN: msisdn,
@@ -123,7 +125,6 @@ func CheckPhoneNumber(phone string)error{
 			}
 
 		}
-
 		if strLen == 10{
 			//if len is 10
 			//it should start with 0
@@ -131,8 +132,6 @@ func CheckPhoneNumber(phone string)error{
 				return fmt.Errorf("%v: should start with \"0\"\n",errInvalidPhoneNumber)
 			}
 		}
-
 		return nil
 	}
-
 }
