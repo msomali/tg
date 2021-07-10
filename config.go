@@ -28,7 +28,7 @@ const (
 )
 
 func LoadConfFromEnv() (*Config, error) {
-	err := godotenv.Load("tigo.env")
+	err := godotenv.Load()
 	if err != nil {
 		return nil, fmt.Errorf("error loading .env file %v\n", err)
 	}
