@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/techcraftt/tigosdk/aw"
 	"github.com/techcraftt/tigosdk/push"
+	"os"
+	"text/tabwriter"
 )
 
 var (
@@ -19,6 +21,22 @@ type (
 )
 
 func (r *responsePrinter) TextOut(reqType RequestType, payload interface{}) {
+	// initialize tabwriter
+	w := new(tabwriter.Writer)
+
+	// minwidth, tabwidth, padding, padchar, flags
+	w.Init(os.Stdout, 8, 8, 0, '\t', 0)
+
+	defer func(w *tabwriter.Writer) {
+		err := w.Flush()
+		if err != nil {
+			fmt.Printf("error while closing tabwriter: %v\n",err)
+		}
+	}(w)
+
+	_, _ = fmt.Fprintf(w, "\n %s\t", "RESPONSE")
+	_, _ = fmt.Fprintf(w, "\n %s\t", "--------")
+
 	switch reqType {
 	case PushPay:
 		response, ok := payload.(push.PayResponse)
@@ -26,12 +44,12 @@ func (r *responsePrinter) TextOut(reqType RequestType, payload interface{}) {
 			fmt.Printf("unkown push pay response format cannot log")
 		}
 
-		fmt.Printf("PUSH PAY RESPONSE\n-----------------")
-		fmt.Printf(response.ResponseCode)
-		fmt.Printf(response.ResponseDescription)
-		fmt.Printf("%t",response.ResponseStatus)
-		fmt.Printf(response.ReferenceID)
-		fmt.Printf(response.Message)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "ID:", response.ReferenceID)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "Code:", response.ResponseCode)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "Desc:", response.ResponseDescription)
+		_, _ = fmt.Fprintf(w, "\n %s\t%t\t", "Status:", response.ResponseStatus)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "Message:", response.Message)
+
 		return
 
 	case Disburse:
@@ -40,12 +58,12 @@ func (r *responsePrinter) TextOut(reqType RequestType, payload interface{}) {
 			fmt.Printf("unkown disbursement response format cannot log")
 		}
 
-		fmt.Printf("DISBURSEMENT RESPONSE\n-----------------")
-		fmt.Printf(response.Type)
-		fmt.Printf(response.TxnID)
-		fmt.Printf("%s",response.TxnStatus)
-		fmt.Printf(response.ReferenceID)
-		fmt.Printf(response.Message)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "Type:", response.Type)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "Ref:", response.ReferenceID)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "ID:", response.TxnID)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "Status:", response.TxnStatus)
+		_, _ = fmt.Fprintf(w, "\n %s\t%s\t", "Message:", response.Message)
+
 		return
 	}
 }
