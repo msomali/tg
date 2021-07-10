@@ -60,7 +60,7 @@ func (client *Client) OnLoginAction(ctx *cli.Context) error {
 
 func (client *Client) AfterLoginAction(ctx *cli.Context) error {
 	return nil
-}	
+}
 
 func (client *Client) OnLoginError(context *cli.Context, err error, isSubcommand bool) error {
 	return nil

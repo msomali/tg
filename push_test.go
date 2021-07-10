@@ -12,58 +12,58 @@ func TestCheckPhoneNumber(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "normal phone number starting with \"0\"",
-			args:    args{
+			name: "normal phone number starting with \"0\"",
+			args: args{
 				phone: "0765992153",
 			},
 			wantErr: false,
 		},
 		{
-			name:    "normal phone number starting with \"255\"",
-			args:    args{
+			name: "normal phone number starting with \"255\"",
+			args: args{
 				phone: "255765992153",
 			},
 			wantErr: false,
 		},
 		{
-			name:    "does not start with \"0\"",
-			args:    args{
+			name: "does not start with \"0\"",
+			args: args{
 				phone: "9765992153",
 			},
 			wantErr: true,
 		},
 		{
-			name:    "does not start with \"255\"",
-			args:    args{
+			name: "does not start with \"255\"",
+			args: args{
 				phone: "300765992153",
 			},
 			wantErr: true,
 		},
 		{
-			name:    "too long",
-			args:    args{
+			name: "too long",
+			args: args{
 				phone: "07665992153586952",
 			},
 			wantErr: true,
 		},
 		{
-			name:    "too short",
-			args:    args{
+			name: "too short",
+			args: args{
 				phone: "5992153",
 			},
 			wantErr: true,
 		},
 		{
-			name:    "incorrect length (11)",
-			args:    args{
+			name: "incorrect length (11)",
+			args: args{
 				phone: "076599215",
 			},
 			wantErr: true,
 		},
 
 		{
-			name:    "has letters",
-			args:    args{
+			name: "has letters",
+			args: args{
 				phone: "076599215X",
 			},
 			wantErr: true,

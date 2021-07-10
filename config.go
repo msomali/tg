@@ -34,7 +34,7 @@ func LoadConfFromEnv() (*Config, error) {
 	}
 
 	pushMaxAmount := os.Getenv(envPushMaxAmount)
-	pushMinAmount:= os.Getenv(envPushMinAmount)
+	pushMinAmount := os.Getenv(envPushMinAmount)
 	disburseMaxAmount := os.Getenv(envDisburseMaxAmount)
 	disburseMinAmount := os.Getenv(envDisburseMinAmount)
 

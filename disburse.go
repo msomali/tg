@@ -45,18 +45,18 @@ func (client *Client) BeforeDisburseAction(ctx *cli.Context) error {
 	amount := int64(ctx.Float64("amount"))
 	verbose := ctx.Bool("verbose")
 	defer func(v bool) {
-		if v{
+		if v {
 			fmt.Printf("perfoming disbursement of amount: %d to phone: %s\n",
 				amount, phone)
 		}
 	}(verbose)
 
 	err := CheckPhoneNumber(phone)
-	if err != nil{
+	if err != nil {
 		return err
 	}
-	if amount< client.MinDisburseAmount || amount > client.MaxDisburseAmount{
-		return fmt.Errorf("the amount (%d) is out of range: allowed MAX is %d, allowed MIN is %d\n", amount,client.MaxPushAmount, client.MinPushAmount)
+	if amount < client.MinDisburseAmount || amount > client.MaxDisburseAmount {
+		return fmt.Errorf("the amount (%d) is out of range: allowed MAX is %d, allowed MIN is %d\n", amount, client.MaxPushAmount, client.MinPushAmount)
 	}
 	err = client.ValidateConfig(Disburse)
 	if err != nil {
@@ -66,15 +66,15 @@ func (client *Client) BeforeDisburseAction(ctx *cli.Context) error {
 }
 
 func (client *Client) OnDisburseAction(ctx *cli.Context) error {
+
 	ctx2, cancel := context.WithTimeout(ctx.Context, time.Minute)
 	defer cancel()
 
 	msisdn := ctx.String("phone")
-	id := fmt.Sprintf("%s%s%d", client.disburse.BrandID,client.ReferenceIDPrefix,time.Now().Local().Unix())
+	id := fmt.Sprintf("%s%s%d", client.disburse.BrandID, client.ReferenceIDPrefix, time.Now().Local().Unix())
 	amount := ctx.Float64("amount")
-
 	response, err := client.disburse.Disburse(ctx2, id, msisdn, amount)
-	fmt.Printf("response: %v\n", response)
+	defaultResponsePrinter.TextOut(Disburse, response)
 	return err
 }
 
@@ -83,5 +83,6 @@ func (client *Client) AfterDisburseAction(ctx *cli.Context) error {
 }
 
 func (client *Client) OnDisburseError(context *cli.Context, err error, isSubcommand bool) error {
+	fmt.Printf("error during disbursement %v\n", err)
 	return nil
 }

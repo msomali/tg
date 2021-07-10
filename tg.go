@@ -13,8 +13,11 @@ const (
 	Disburse
 )
 
+
 var (
 	ErrNilEmptyConfigVar = errors.New("nil or empty configuration variable")
+
+	defaultResponsePrinter = &responsePrinter{}
 )
 
 type (

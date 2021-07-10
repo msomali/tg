@@ -7,11 +7,10 @@ import (
 	"os"
 )
 
-
 func main() {
 	config, err := tg.LoadConfFromEnv()
 	if err != nil {
-		fmt.Printf("error while loading config %v\n",err)
+		fmt.Printf("error while loading config %v\n", err)
 		config = &tg.Config{}
 	}
 	app := tg.Make(config)
