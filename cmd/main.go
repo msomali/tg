@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/techcraftt/tg"
 	"log"
 	"os"
@@ -8,11 +9,12 @@ import (
 
 
 func main() {
-	conf, err := tg.LoadConfFromEnv()
+	config, err := tg.LoadConfFromEnv()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("error while loading config %v\n",err)
+		config = &tg.Config{}
 	}
-	app := tg.Make(conf)
+	app := tg.Make(config)
 	err = app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

@@ -2,10 +2,17 @@ package tg
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/techcraftt/tigosdk/push"
 	"github.com/urfave/cli/v2"
+	"regexp"
+	"strings"
 	"time"
+)
+
+var (
+	errInvalidPhoneNumber = errors.New("invalid phone number format: allowed format: 255XXXXXXXXX OR 0XXXXXXXXX")
 )
 
 func (client *Client) MakePushCommand() *cli.Command {
@@ -44,6 +51,7 @@ func (client *Client) MakePushCommand() *cli.Command {
 
 func (client *Client) BeforePushAction(ctx *cli.Context) error {
 	phone := ctx.String("phone")
+	//"^\\d+$"
 	amount := int64(ctx.Float64("amount"))
 	if amount< client.MinPushAmount || amount > client.MaxPushAmount{
 		return fmt.Errorf("the amount (%d) is out of range: allowed MAX is %d, allowed MIN is %d\n", amount,client.MaxPushAmount, client.MinPushAmount)
@@ -91,4 +99,40 @@ func (client *Client) AfterPushAction(ctx *cli.Context) error {
 func (client *Client) OnPushError(context *cli.Context, err error, isSubcommand bool) error {
 	fmt.Printf("error while push pay %v\n", err)
 	return nil
+}
+
+func CheckPhoneNumber(phone string)error{
+	strLen := len(phone)
+	//check length
+	if strLen != 10 && strLen != 12{
+		return errInvalidPhoneNumber
+	}
+
+	re := regexp.MustCompile("^\\d+$")
+
+	match := re.MatchString(phone)
+
+	if ! match{
+		return fmt.Errorf("%v: letters are not allowed\n",errInvalidPhoneNumber)
+	} else{
+		if strLen == 12{
+			//if the length == 12
+			//it should start with 255
+			if !strings.HasPrefix(phone, "255"){
+				return fmt.Errorf("%v: should start with \"255\"\n",errInvalidPhoneNumber)
+			}
+
+		}
+
+		if strLen == 10{
+			//if len is 10
+			//it should start with 0
+			if !strings.HasPrefix(phone, "0"){
+				return fmt.Errorf("%v: should start with \"0\"\n",errInvalidPhoneNumber)
+			}
+		}
+
+		return nil
+	}
+
 }
