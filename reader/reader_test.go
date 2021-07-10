@@ -28,7 +28,7 @@ func TestMake(t *testing.T) {
 			name: "reader without any default settings",
 			args: args{
 				options: []Option{
-					WithDisburseFileName(""),WithPushFileName(""),WithDefaultPath(""),
+					WithDisburseFileName(""), WithPushFileName(""), WithDefaultPath(""),
 				},
 			},
 			want: &reader{
@@ -41,7 +41,7 @@ func TestMake(t *testing.T) {
 			name: "reader with some names",
 			args: args{
 				options: []Option{
-					WithDisburseFileName("theonedisbursefile.csv"),WithPushFileName("thepushmaestro.csv"),
+					WithDisburseFileName("theonedisbursefile.csv"), WithPushFileName("thepushmaestro.csv"),
 				},
 			},
 			want: &reader{

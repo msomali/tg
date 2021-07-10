@@ -10,15 +10,15 @@ import (
 func (client *Client) MakeDisburseCommand() *cli.Command {
 	flags := []cli.Flag{
 		&cli.StringFlag{
-			Name:    "phone",
-			Usage:   "phone number to receive request",
-			Value:   "",
+			Name:  "phone",
+			Usage: "phone number to receive request",
+			Value: "",
 		},
 
 		&cli.StringFlag{
-			Name:    "id",
-			Value:   "",
-			Usage:   "the reference id of the request",
+			Name:  "id",
+			Value: "",
+			Usage: "the reference id of the request",
 		},
 		&cli.Float64Flag{
 			Name:  "amount",
@@ -56,7 +56,7 @@ func (client *Client) OnDisburseAction(ctx *cli.Context) error {
 	id := ctx.String("id")
 	amount := ctx.Float64("amount")
 
-	response, err := client.disburse.Disburse(ctx2, id,msisdn,amount)
+	response, err := client.disburse.Disburse(ctx2, id, msisdn, amount)
 	fmt.Printf("response: %v\n", response)
 	return err
 }

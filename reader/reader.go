@@ -37,10 +37,9 @@ type (
 	}
 )
 
-
 func WithDefaultPath(path string) Option {
 	return func(r Reader) {
-		if path == ""{
+		if path == "" {
 			return
 		}
 		rd, ok := r.(*reader)
@@ -54,12 +53,12 @@ func WithDefaultPath(path string) Option {
 
 func WithPushFileName(filename string) Option {
 	return func(r Reader) {
-		if filename== ""{
+		if filename == "" {
 			return
 		}
 		rd, ok := r.(*reader)
 		if ok {
-			rd.pushFile= filename
+			rd.pushFile = filename
 			return
 		}
 
@@ -68,12 +67,12 @@ func WithPushFileName(filename string) Option {
 
 func WithDisburseFileName(filename string) Option {
 	return func(r Reader) {
-		if filename == ""{
+		if filename == "" {
 			return
 		}
 		rd, ok := r.(*reader)
 		if ok {
-			rd.disburseFile= filename
+			rd.disburseFile = filename
 			return
 		}
 
@@ -115,23 +114,22 @@ func (p *reader) ReadFile(filepath string, requestType tg.RequestType) ([]tg.Req
 			log.Fatal(err)
 		}
 
-
 		referenceID := line[0]
 		amount := line[1]
 		msisdn := line[2]
 
-		fmt.Printf("%v\n",amount)
+		fmt.Printf("%v\n", amount)
 
 		var remarks string
 
-		if requestType == tg.PushPay{
+		if requestType == tg.PushPay {
 			remarks = line[3]
 		}
 		requests = append(requests, tg.Request{
 			ReferenceID: referenceID,
 			//Amount:      int(amount),
-			MSISDN:      msisdn,
-			Remarks:     remarks,
+			MSISDN:  msisdn,
+			Remarks: remarks,
 		})
 	}
 

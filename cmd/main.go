@@ -39,10 +39,14 @@ func LoadConfingFromEnv() (*tg.Config, error) {
 	disburseAccountName = os.Getenv(envDisburseAccountName)
 
 	return &tg.Config{
-		ReferenceIDPrefix:         "",
-		AppName:                   "",
-		AppVersion:                "",
-		ReleaseDate:               "",
+		ReferenceIDPrefix:         "TGCLI",
+		AppName:                   "tg",
+		AppVersion:                "v1.0.0",
+		ReleaseDate:               "July 2021",
+		MaxPushAmount:             1000000,
+		MinPushAmount:             1000,
+		MaxDisburseAmount:         1000000,
+		MinDisburseAmount:         1000,
 		DisburseAccountName:       disburseAccountName,
 		DisburseAccountMSISDN:     disburseAccountMSISDN,
 		DisburseBrandID:           disburseBrandID,
@@ -50,7 +54,7 @@ func LoadConfingFromEnv() (*tg.Config, error) {
 		DisburseRequestURL:        disburseURL,
 		PushUsername:              pushUsername,
 		PushPassword:              pushUsername,
-		PushPasswordGrantType:     "",
+		PushPasswordGrantType:     "password",
 		PushApiBaseURL:            "",
 		PushGetTokenURL:           "",
 		PushBillerMSISDN:          "",
@@ -58,13 +62,13 @@ func LoadConfingFromEnv() (*tg.Config, error) {
 		PushPayURL:                "",
 		PushReverseTransactionURL: "",
 		PushHealthCheckURL:        "",
-	},nil
+	}, nil
 }
 
 func main() {
 
 	conf, err := LoadConfingFromEnv()
-	if err != nil{
+	if err != nil {
 		log.Fatal(err)
 	}
 	app := tg.Make(conf)
