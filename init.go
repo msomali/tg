@@ -23,3 +23,64 @@
  */
 
 package tg
+
+import (
+	"bufio"
+	"fmt"
+	"github.com/urfave/cli/v2"
+	"os"
+	"strings"
+)
+
+func (client *Client)MakeInitCommand() *cli.Command {
+	command := &cli.Command{
+		Name:         "init",
+		Usage:        "initialize the tool",
+		Before:       BeforeInitAction,
+		After:        client.AfterInitAction,
+		Action:       client.OnInitAction,
+		OnUsageError: OnInitError,
+	}
+
+	return command
+}
+
+func OnInitError(context *cli.Context, err error, subcommand bool) error {
+	fmt.Printf("error occurred: %v\n", err)
+	return nil
+}
+
+func (client *Client) OnInitAction(context *cli.Context) error {
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print("Enter Username: ")
+	username, err := reader.ReadString('\n')
+	if err != nil{
+		return err
+	}
+
+	if strings.TrimSpace(username) == ""{
+		return fmt.Errorf("username is empty, enter a valid one")
+	}
+	password, err := ReadPassword(10)
+	if err != nil{
+		return err
+	}
+
+	login := &Login{
+		Username: strings.TrimSpace(username),
+		Password: password,
+	}
+	client.login = login
+	fmt.Print("\nOK\n")
+	return nil
+}
+
+func(client *Client) AfterInitAction(context *cli.Context) error {
+	fmt.Printf("username: %s and password: %s\n", client.login.Username, client.login.Password)
+	return nil
+}
+
+func BeforeInitAction(context *cli.Context) error {
+	return nil
+}

@@ -43,6 +43,11 @@ var (
 )
 
 type (
+
+	Login struct {
+		Username string
+		Password string
+	}
 	Option func(app *App)
 
 	App struct {
@@ -51,6 +56,7 @@ type (
 	}
 	Client struct {
 		*Config
+		login *Login
 		push     *push.Client
 		disburse *aw.Client
 	}
@@ -196,6 +202,7 @@ func app(client *Client) *cli.App {
 
 	commands = append(
 		commands,
+		client.MakeInitCommand(),
 		client.MakeLoginCommand(),
 		client.MakeConfigCommand(),
 		client.MakePushCommand(),

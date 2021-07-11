@@ -28,7 +28,9 @@ import (
 	"fmt"
 	"github.com/techcraftt/tigosdk/aw"
 	"github.com/techcraftt/tigosdk/push"
+	"golang.org/x/crypto/ssh/terminal"
 	"os"
+	"strings"
 	"text/tabwriter"
 )
 
@@ -40,6 +42,8 @@ type (
 	Printer interface {
 		TextOut(reqType RequestType, payload interface{})
 	}
+
+
 
 	responsePrinter struct{}
 )
@@ -90,4 +94,48 @@ func (r *responsePrinter) TextOut(reqType RequestType, payload interface{}) {
 
 		return
 	}
+}
+
+func ReadPassword(attempts int)(string,error){
+
+	if attempts <= 1{
+		fmt.Print("Enter Password: ")
+		bytePassword, err := terminal.ReadPassword(0)
+		if err != nil {
+			return "", fmt.Errorf("error reading password %v",err)
+		}
+		password := string(bytePassword)
+		return strings.TrimSpace(password),nil
+	}else {
+		nOfAttempts,maxAttempts := 0,2
+		done := false
+		fmt.Print("Enter Password: ")
+		bytePassword, err := terminal.ReadPassword(0)
+		if err != nil {
+			return "", fmt.Errorf("error reading password %v",err)
+		}
+		password := strings.TrimSpace(string(bytePassword))
+		for{
+
+			fmt.Print("\nPassword Again: ")
+			bytePassword1, err := terminal.ReadPassword(0)
+			if err != nil {
+				return "", fmt.Errorf("error reading password %v",err)
+			}
+			password1 := strings.TrimSpace(string(bytePassword1))
+
+			if password == password1{
+				done = true
+			}
+
+			if done && password != ""{
+				return password,nil
+			}
+			nOfAttempts = nOfAttempts+1
+			if nOfAttempts == maxAttempts{
+				return "", fmt.Errorf("please enter same password")
+			}
+		}
+	}
+
 }
