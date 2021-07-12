@@ -1,55 +1,25 @@
 # tg
 a command line tool to perform tigo based push payment request and disbursement.
 
+expected environmental variables before staring to use the tool
 
-## supported features
-- [init](#init)
-- [push](#push)
-- [disburse](#disburse)
+```text
 
-
-## init
-This offers a way to configure the tool with tigo integration details
-
-```bash
- tg init --file=config.yaml
-
- tg init
-
- tg init push
-
- tg init disburse
-
+TIGO_DISBURSE_ACCOUNT_NAME=""
+TIGO_DISBURSE_ACCOUNT_MSISDN=
+TIGO_DISBURSE_BRAND_ID=
+TIGO_DISBURSE_PIN=
+TIGO_DISBURSE_URL=""
+TIGO_PUSH_USERNAME=""
+TIGO_PUSH_PASSWORD=""
+TIGO_PUSH_BASE_URL="http://accessgw.tigo.co.tz:8080"
+TIGO_PUSH_BILLER_MSISDN=""
+TIGO_PUSH_BILLER_CODE=""
+TIGO_PUSH_TOKEN_URL=""
+TIGO_PUSH_PAY_URL=""
+TIGO_PUSH_MAX_AMOUNT=1000000
+TIGO_PUSH_MIN_AMOUNT=1000
+TIGO_DISBURSE_MAX_AMOUNT=1000000
+TIGO_DISBURSE_MIN_AMOUNT=1000
 ```
 
-## push
-
-make push pay request to a single user
-
-```bash
-
-tg push --config=config-file.yml --file=customers.csv
-
-tg push --phone=0712XXXXXX --amount=10000 --remarks="donation from cmd"
-
-```
-
-make push pay request to multiple users at once
-
-```bash
-
-tg push --file=customers.csv
-
-```
-
-
-## disburse
-pay someone or a number of people at once from command line
-
-```bash
-
- tg disburse --file=loans.csv
-
- tg disburse --phone="07123CCCCC" --amount=10000
-
-```
