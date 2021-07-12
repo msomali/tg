@@ -26,6 +26,7 @@ package tg
 
 import (
 	"errors"
+	"github.com/techcraftt/tg/secret"
 	"github.com/techcraftt/tigosdk/aw"
 	"github.com/techcraftt/tigosdk/pkg/tigo"
 	"github.com/techcraftt/tigosdk/push"
@@ -43,7 +44,6 @@ var (
 )
 
 type (
-
 	Login struct {
 		Username string
 		Password string
@@ -56,9 +56,10 @@ type (
 	}
 	Client struct {
 		*Config
-		login *Login
+		login    *Login
 		push     *push.Client
 		disburse *aw.Client
+		secrets *secret.Client
 	}
 	RequestType int
 
@@ -170,10 +171,12 @@ func Make(config *Config, opts ...Option) *App {
 		Config:   config,
 		push:     pushClient,
 		disburse: disburseClient,
+		secrets: secret.New(),
 	}
 	app := &App{
 		cli:    app(client),
 		client: client,
+
 	}
 
 	for _, opt := range opts {

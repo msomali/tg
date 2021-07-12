@@ -27,12 +27,13 @@ package tg
 import (
 	"bufio"
 	"fmt"
+	"github.com/techcraftt/tg/secret"
 	"github.com/urfave/cli/v2"
 	"os"
 	"strings"
 )
 
-func (client *Client)MakeInitCommand() *cli.Command {
+func (client *Client) MakeInitCommand() *cli.Command {
 	command := &cli.Command{
 		Name:         "init",
 		Usage:        "initialize the tool",
@@ -55,15 +56,15 @@ func (client *Client) OnInitAction(context *cli.Context) error {
 
 	fmt.Print("Enter Username: ")
 	username, err := reader.ReadString('\n')
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
-	if strings.TrimSpace(username) == ""{
+	if strings.TrimSpace(username) == "" {
 		return fmt.Errorf("username is empty, enter a valid one")
 	}
 	password, err := ReadPassword(10)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
@@ -73,11 +74,18 @@ func (client *Client) OnInitAction(context *cli.Context) error {
 	}
 	client.login = login
 	fmt.Print("\nOK\n")
+	secret.WithUser(username)(client.secrets)
+	_ = client.secrets.Save(password)
 	return nil
 }
 
-func(client *Client) AfterInitAction(context *cli.Context) error {
+func (client *Client) AfterInitAction(context *cli.Context) error {
 	fmt.Printf("username: %s and password: %s\n", client.login.Username, client.login.Password)
+	kg, err := client.secrets.Get()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("from keyring the details are: %s\n",kg)
 	return nil
 }
 
