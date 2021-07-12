@@ -29,8 +29,8 @@ import (
 	"encoding/csv"
 	"fmt"
 	"github.com/techcraftt/tg"
+	terror "github.com/techcraftt/tg/errors"
 	"io"
-	"log"
 	"os"
 )
 
@@ -125,7 +125,8 @@ func (p *reader) ReadFile(filepath string, requestType tg.RequestType) ([]tg.Req
 	}
 	f, err := os.Open(filepath)
 	if err != nil {
-		return nil, err
+		tgError := terror.New("read file","opening file",err)
+		return nil, tgError
 	}
 	reader := csv.NewReader(bufio.NewReader(f))
 
@@ -135,7 +136,8 @@ func (p *reader) ReadFile(filepath string, requestType tg.RequestType) ([]tg.Req
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			log.Fatal(err)
+			tgError := terror.New("read file","reading csv file",err)
+			return nil, tgError
 		}
 
 		referenceID := line[0]

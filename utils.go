@@ -50,7 +50,6 @@ func (r *responsePrinter) TextOut(reqType RequestType, payload interface{}) {
 	// initialize tabwriter
 	w := new(tabwriter.Writer)
 
-	// minwidth, tabwidth, padding, padchar, flags
 	w.Init(os.Stdout, 8, 8, 0, '\t', 0)
 
 	defer func(w *tabwriter.Writer) {
@@ -114,7 +113,6 @@ func ReadPassword(attempts int) (string, error) {
 		}
 		password := strings.TrimSpace(string(bytePassword))
 		for {
-
 			fmt.Print("\nPassword Again: ")
 			bytePassword1, err := terminal.ReadPassword(0)
 			if err != nil {
