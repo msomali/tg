@@ -34,37 +34,35 @@ const (
 	MinCost     = 4
 	DefaultCost = 10
 	MaxCost     = 31
-	DefaultUser  = "admin"
+	DefaultUser = "admin"
 	DefaultName = "tg"
-
 )
 
 var (
-	_ Service = (*Client)(nil)
+	_ IService = (*Service)(nil)
 )
 
 type (
-	Client struct {
+	Service struct {
 		Name string
 		User string
 		Cost int
 	}
 
-	Opt     func(s *Client)
-	Service interface {
+	Opt      func(s *Service)
+	IService interface {
 		Hash(password string) (hash string, err error)
-		Compare(password, hash string)error
-		Get() (string,error)
+		Compare(password, hash string) error
+		Get() (string, error)
 		Save(password string) error
 		Confirm(password string) error
 		Delete() error
 	}
 )
 
-
-func WithUser(user string)Opt{
-	return func(s *Client) {
-		if user == ""{
+func WithUser(user string) Opt {
+	return func(s *Service) {
+		if user == "" {
 			s.User = DefaultUser
 			return
 		}
@@ -72,9 +70,9 @@ func WithUser(user string)Opt{
 	}
 }
 
-func WithServiceName(name string)Opt{
-	return func(s *Client) {
-		if name == ""{
+func WithServiceName(name string) Opt {
+	return func(s *Service) {
+		if name == "" {
 			s.Name = DefaultName
 			return
 		}
@@ -83,7 +81,7 @@ func WithServiceName(name string)Opt{
 }
 
 func WithCost(cost int) Opt {
-	return func(s *Client) {
+	return func(s *Service) {
 		if cost < MinCost {
 			s.Cost = MinCost
 			return
@@ -96,54 +94,59 @@ func WithCost(cost int) Opt {
 	}
 }
 
-func New(opts ...Opt) *Client {
-	s := &Client{
+func New(opts ...Opt) *Service {
+	s := &Service{
 		Name: DefaultName,
 		User: DefaultUser,
 		Cost: DefaultCost,
 	}
-
 	for _, opt := range opts {
 		opt(s)
 	}
-
 	return s
 }
 
-func (c *Client) Hash(password string) (hash string, err error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), c.Cost)
+func (s *Service) Hash(password string) (hash string, err error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), s.Cost)
 	return string(bytes), err
 }
 
-func (c *Client) Compare(hash,password string) error{
-	return bcrypt.CompareHashAndPassword([]byte(hash),[]byte(password))
+func (s *Service) Compare(hash, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 }
 
-func (c *Client) Confirm(password string) error {
-	hash, err := c.Get()
+func (s *Service) Confirm(password string) error {
+	hash, err := s.Get()
 	if err != nil {
-		return fmt.Errorf("error occurred while fetching password: %v\n",err)
+		return fmt.Errorf("error occurred while fetching password: %v\n", err)
 	}
-	err = c.Compare(hash, password)
+	err = s.Compare(hash, password)
 	if err != nil {
-		return fmt.Errorf("error occurred while comparing hash and password: %v\n",err)
+		return fmt.Errorf("error occurred while comparing hash and password: %v\n", err)
 	}
 	return nil
 }
 
-
-func (c *Client) Get() (string,error){
-	return keyring.Get(c.Name, c.User)
+func (s *Service) Get() (string, error) {
+	return keyring.Get(s.Name, s.User)
 }
 
-func (c *Client) Save(password string) error{
-	hash, err := c.Hash(password)
+func (s *Service) Save(password string) error {
+	hash, err := s.Hash(password)
 	if err != nil {
-		return fmt.Errorf("coud not save password: %v\n",err)
+		return fmt.Errorf("coud not save password: %v\n", err)
 	}
-	return keyring.Set(c.Name, c.User, hash)
+	return keyring.Set(s.Name, s.User, hash)
 }
 
-func (c *Client) Delete() error {
-	return keyring.Delete(c.Name, c.User)
+func (s *Service) Delete() error {
+	return keyring.Delete(s.Name, s.User)
+}
+
+func (s *Service) Token() (string,error) {
+	return "",nil
+}
+
+func (s *Service) ParseToken(token string) error{
+	return nil
 }

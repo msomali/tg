@@ -59,7 +59,7 @@ type (
 		login    *Login
 		push     *push.Client
 		disburse *aw.Client
-		secrets *secret.Client
+		secrets  *secret.Service
 	}
 	RequestType int
 
@@ -171,12 +171,11 @@ func Make(config *Config, opts ...Option) *App {
 		Config:   config,
 		push:     pushClient,
 		disburse: disburseClient,
-		secrets: secret.New(),
+		secrets:  secret.New(),
 	}
 	app := &App{
 		cli:    app(client),
 		client: client,
-
 	}
 
 	for _, opt := range opts {

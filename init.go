@@ -85,7 +85,7 @@ func (client *Client) AfterInitAction(context *cli.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("from keyring the details are: %s\n",kg)
+	fmt.Printf("from keyring the details are: %s\n", kg)
 	return nil
 }
 
